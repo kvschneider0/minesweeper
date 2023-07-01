@@ -9,36 +9,39 @@ export const getNewGame = (height: number, width: number, numBombs: number) => {
     freeIndexes = freeIndexes.filter(index => index !== randIdx);
     numBombs -= 1
   }
+  result[0] = -1;
 
   for (let i = 0; i < result.length; i++) {
     if (result[i] === -1) {
       continue;
     }
-    const checkIndex = (index: number) => {
+    const countIfBomb = (index: number) => {
       if (
-        0 < index && 
+        0 <= index && 
         index < numTiles && 
         result[index] === -1
       ) {
         result[i] += 1;
       }
     };
+    const isLeftEdge = i % width === 0;
+    const isRightEdge = i % width === width - 1;
     // N
-    checkIndex(i - width);
+    countIfBomb(i - width);
     // S
-    checkIndex(i + width);
+    countIfBomb(i + width);
     // W
-    checkIndex(i - 1);
+    if (!isLeftEdge) countIfBomb(i - 1);
     // E
-    checkIndex(i + 1);
+    if (!isRightEdge) countIfBomb(i + 1);
     // NE
-    checkIndex(i - width + 1);
+    if (!isRightEdge) countIfBomb(i - width + 1);
     // SE
-    checkIndex(i + width + 1);
+    if (!isRightEdge) countIfBomb(i + width + 1);
     // SW
-    checkIndex(i + width - 1);
+    if (!isLeftEdge) countIfBomb(i + width - 1);
     // NW
-    checkIndex(i - width - 1);
+    if (!isLeftEdge) countIfBomb(i - width - 1);
   }
 
   return result
